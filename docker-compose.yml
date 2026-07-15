@@ -1,0 +1,17 @@
+services:
+  fastapi:
+    image: swttn/hpp-fastapi:dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+  streamlit:
+    image: swttn/hpp-streamlit:dev
+    build:
+      context: ./streamlit_app
+      dockerfile: Dockerfile
+    ports:
+      - "2607:2607"
+    environment:
+      - API_URL=http://fastapi:8000
