@@ -32,6 +32,17 @@ jobs:
                     mlflow server --host 0.0.0.0 \
                     --backend-store-uri sqlite:///mlflow.db \
                     --default-artifact-root /tmp/mlruns
+                
+                echo "Waiting for MLFlow server to become available..."
+                # Try to curl the server up to 15 times, waiting 2 seconds between attempts
+                for i in {1..15}; do
+                  if curl -s http://localhost:5555 > /dev/null; then
+                    echo "MLFlow is up and running!"
+                    break
+                  fi
+                  echo "Waiting..."
+                  sleep 2
+                done
 
         -   name: Train Model
             run: |
@@ -39,7 +50,7 @@ jobs:
                     --config configs/model_config.yaml \
                     --data data/processed/featured_house_data.csv \
                     --models-dir models \
-                    --mlflow-tracking-url http://localhost:5555
+                    --mlflow-tracking-uri http://localhost:5555
 
         -   name: Upload Trained Model
             uses: actions/upload-artifact@v7
