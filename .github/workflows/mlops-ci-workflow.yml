@@ -37,4 +37,5 @@ jobs:
     if: ${{ inputs.run_all || inputs.run_build_and_publish }}
     uses: './.github/workflows/mlops-build-and-publish-template.yml'
     needs: model-training
+    secrets: inherit
     
